@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>יואב | בנייה, עיצוב ותחזוקת אתרים</title>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Colors */
+            --bg-color: #f9fafb;
+            --surface-color: #ffffff;
+            --text-main: #1f2937;
+            --text-muted: #4b5563;
+            --primary-color: #3b2c6e; /* עמוק כחול-סגול */
+            --primary-light: #524094;
+            --accent-color: #e65c00; /* חם - כתום עמוק לכפתורים */
+            --accent-hover: #cc5200;
+            --border-color: #e5e7eb;
+            
+            /* Spacing & Sizes */
+            --radius: 12px;
+            --container: 1200px;
+            --section-padding: 5rem 1rem;
+        }
+
+        /* Reset & Base */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Heebo', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            scroll-behavior: smooth;
+        }
+        img { max-width: 100%; height: auto; display: block; border-radius: var(--radius); }
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+        
+        /* Accessibility Focus */
+        *:focus-visible {
+            outline: 3px solid var(--accent-color);
+            outline-offset: 2px;
+        }
+
+        /* Typography */
+        h1, h2, h3 { font-weight: 800; color: var(--primary-color); line-height: 1.2; margin-bottom: 1rem; }
+        h1 { font-size: 2.5rem; }
+        h2 { font-size: 2rem; text-align: center; margin-bottom: 3rem; }
+        h3 { font-size: 1.25rem; }
+        p { color: var(--text-muted); margin-bottom: 1rem; }
+
+        /* Layout */
+        .container { max-width: var(--container); margin: 0 auto; padding: 0 1.5rem; }
+        section { padding: var(--section-padding); }
+        .section-light { background-color: var(--surface-color); }
+        
+        /* Buttons */
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 0.75rem 1.5rem; font-weight: 600; border-radius: var(--radius);
+            cursor: pointer; transition: all 0.2s ease; border: none; text-align: center;
+        }
+        .btn-primary { background-color: var(--accent-color); color: white; }
+        .btn-primary:hover { background-color: var(--accent-hover); }
+        .btn-outline { border: 2px solid var(--primary-color); color: var(--primary-color); background: transparent; }
+        .btn-outline:hover { background-color: var(--primary-color); color: white; }
+
+        /* Header */
+        header {
+            position: sticky; top: 0; background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px); border-bottom: 1px solid var(--border-color);
+            z-index: 1000; padding: 1rem 0;
+        }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.25rem; font-weight: 800; color: var(--primary-color); }
+        .nav-links { display: none; gap: 2rem; }
+        .nav-links a:hover { color: var(--accent-color); }
+        
+        @media (min-width: 768px) {
+            .nav-links { display: flex; }
+            h1 { font-size: 3.5rem; }
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 80vh; display: flex; align-items: center;
+            text-align: center; padding-top: 6rem;
+        }
+        .hero-content { max-width: 800px; margin: 0 auto; }
+        .hero p { font-size: 1.25rem; margin-bottom: 2rem; }
+        .hero-btns { display: flex; flex-direction: column; gap: 1rem; justify-content: center; }
+        @media (min-width: 600px) { .hero-btns { flex-direction: row; } }
+
+        /* Animation */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .hero-animate { animation: fadeInUp 0.8s ease-out forwards; }
+        @media (prefers-reduced-motion: reduce) {
+            .hero-animate { animation: none !important; opacity: 1; transform: none; }
+            * { scroll-behavior: auto !important; }
+        }
+
+        /* Grid Layouts */
+        .grid-3 { display: grid; gap: 2rem; grid-template-columns: 1fr; }
+        @media (min-width: 768px) { .grid-3 { grid-template-columns: repeat(3, 1fr); } }
+        
+        .grid-2 { display: grid; gap: 2rem; grid-template-columns: 1fr; }
+        @media (min-width: 768px) { .grid-2 { grid-template-columns: repeat(2, 1fr); } }
+
+        /* Cards */
+        .card {
+            background: var(--surface-color); padding: 2rem;
+            border-radius: var(--radius); border: 1px solid var(--border-color);
+            transition: transform 0.2s ease;
+        }
+        .card:hover { transform: translateY(-5px); }
+        .icon { width: 48px; height: 48px; margin-bottom: 1rem; color: var(--primary-color); }
+
+        /* Process Steps */
+        .process-grid { display: grid; gap: 2rem; grid-template-columns: 1fr; }
+        @media (min-width: 600px) { .process-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (min-width: 992px) { .process-grid { grid-template-columns: repeat(4, 1fr); } }
+        .step { text-align: center; }
+        .step-num {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 50px; height: 50px; background: var(--primary-color); color: white;
+            border-radius: 50%; font-size: 1.25rem; font-weight: bold; margin-bottom: 1rem;
+        }
+
+        /* Portfolio */
+        .portfolio-grid { display: grid; gap: 1.5rem; grid-template-columns: 1fr; }
+        @media (min-width: 600px) { .portfolio-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (min-width: 992px) { .portfolio-grid { grid-template-columns: repeat(3, 1fr); } }
+        .portfolio-item {
+            position: relative; overflow: hidden; border-radius: var(--radius);
+            background: var(--surface-color); border: 1px solid var(--border-color);
+        }
+        .portfolio-item img { width: 100%; height: 250px; object-fit: cover; border-radius: var(--radius) var(--radius) 0 0; }
+        .portfolio-info { padding: 1.5rem; }
+        .portfolio-overlay {
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(59, 44, 110, 0.9); display: flex; flex-direction: column;
+            justify-content: center; align-items: center; color: white; opacity: 0;
+            transition: opacity 0.3s ease; border-radius: var(--radius);
+        }
+        .portfolio-item:hover .portfolio-overlay { opacity: 1; }
+
+        /* Pricing */
+        .pricing-card { text-align: center; padding: 3rem 2rem; }
+        .pricing-card h3 { font-size: 1.5rem; }
+        .price { font-size: 2.5rem; font-weight: 800; color: var(--text-main); margin: 1rem 0; }
+        .pricing-card ul { margin: 2rem 0; text-align: right; }
+        .pricing-card li { margin-bottom: 0.75rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; }
+        .pricing-highlight { 
+            border: 2px solid var(--primary-color); 
+            transform: scale(1.02); 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        /* Stats */
+        .stats-grid { display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem; }
+        .stat-item { text-align: center; }
+        .stat-num { font-size: 2.5rem; font-weight: 800; color: var(--primary-color); }
+
+        /* Contact */
+        .form-group { margin-bottom: 1.5rem; }
+        label { display: block; margin-bottom: 0.5rem; font-weight: 600; }
+        input, textarea {
+            width: 100%; padding: 0.75rem; border: 1px solid var(--border-color);
+            border-radius: var(--radius); font-family: inherit; font-size: 1rem;
+            background: var(--bg-color);
+        }
+        input:focus, textarea:focus { outline: 2px solid var(--primary-color); border-color: transparent; }
+        .contact-info { padding: 2rem; background: var(--primary-light); color: white; border-radius: var(--radius); }
+        .contact-info h3, .contact-info p { color: white; }
+        .whatsapp-btn { background: #25D366; color: white; margin-top: 1rem; width: 100%; }
+        .whatsapp-btn:hover { background: #128C7E; }
+        .error-msg { color: #dc2626; font-size: 0.875rem; display: none; margin-top: 0.25rem; }
+
+        /* Footer */
+        footer { background: var(--text-main); color: white; text-align: center; padding: 2rem; }
+        footer p { margin: 0; color: #9ca3af; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container header-content">
+            <a href="#" class="logo">יואב | בנייה ועיצוב אתרים</a>
+            <nav class="nav-links">
+                <a href="#services">שירותים</a>
+                <a href="#process">תהליך</a>
+                <a href="#portfolio">עבודות</a>
+                <a href="#pricing">חבילות</a>
+                <a href="#about">אודות</a>
+            </nav>
+            <a href="#contact" class="btn btn-primary">דברו איתי</a>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container hero-content hero-animate">
+                <h1>אתר שעובד בשבילך, לא רק נראה טוב</h1>
+                <p>אני מלווה עסקים משלב הרעיון ועד להשקה, עם עיצוב מדויק, קוד נקי ותחזוקה שוטפת שמבטיחה ראש שקט ונוכחות דיגיטלית חזקה.</p>
+                <div class="hero-btns">
+                    <a href="#contact" class="btn btn-primary">קבלת הצעת מחיר</a>
+                    <a href="#portfolio" class="btn btn-outline">צפייה בעבודות אחרונות</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="services" class="section-light">
+            <div class="container">
+                <h2>השירותים שלי</h2>
+                <div class="grid-3">
+                    <div class="card">
+                        <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                        <h3>בניית אתרים</h3>
+                        <p>פיתוח אתרים רספונסיביים, מהירים ומונגשים, מותאמים אישית לצרכים העסקיים שלך תוך שימוש בטכנולוגיות מתקדמות.</p>
+                    </div>
+                    <div class="card">
+                        <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path></svg>
+                        <h3>עיצוב UI/UX</h3>
+                        <p>יצירת ממשקי משתמש אינטואיטיביים, נקיים ומודרניים שמספקים חווית גלישה חלקה ומניעים את הגולשים לפעולה.</p>
+                    </div>
+                    <div class="card">
+                        <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        <h3>תחזוקה שוטפת</h3>
+                        <p>שירותי תמיכה, עדכוני אבטחה, גיבויים ואופטימיזציה שוטפת כדי שהאתר ימשיך לעבוד בצורה מושלמת לאורך זמן.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="process">
+            <div class="container">
+                <h2>איך זה עובד? תהליך העבודה</h2>
+                <div class="process-grid">
+                    <div class="step">
+                        <div class="step-num">1</div>
+                        <h3>אפיון</h3>
+                        <p>למידת העסק שלך, הגדרת מטרות האתר וקהל היעד.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">2</div>
+                        <h3>עיצוב</h3>
+                        <p>בניית סקיצות וממשק משתמש מדויק למותג שלך.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">3</div>
+                        <h3>פיתוח</h3>
+                        <p>כתיבת קוד נקי וקידוד האתר לסביבת אינטרנט חיה.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">4</div>
+                        <h3>השקה ותחזוקה</h3>
+                        <p>בדיקות סופיות, העלאה לאוויר וליווי טכני מתמשך.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="portfolio" class="section-light">
+            <div class="container">
+                <h2>עבודות נבחרות</h2>
+                <div class="portfolio-grid" id="portfolio-container">
+                    <!-- יאוכלס דרך JS -->
+                </div>
+            </div>
+        </section>
+
+        <section id="pricing">
+            <div class="container">
+                <h2>חבילות תחזוקה חודשיות</h2>
+                <div class="grid-3">
+                    <div class="card pricing-card">
+                        <h3>בסיסית</h3>
+                        <div class="price" id="price-basic">--</div>
+                        <p>לאתרי תדמית קטנים</p>
+                        <ul>
+                            <li>אחסון שיתופי מהיר</li>
+                            <li>תעודת אבטחה SSL</li>
+                            <li>גיבוי שבועי</li>
+                            <li>עדכוני תוכנה רבעוניים</li>
+                        </ul>
+                        <a href="#contact" class="btn btn-outline" style="width: 100%">בחירה בחבילה</a>
+                    </div>
+                    <div class="card pricing-card pricing-highlight">
+                        <h3>מתקדמת</h3>
+                        <div class="price" id="price-advanced">--</div>
+                        <p>מומלץ לעסקים פעילים</p>
+                        <ul>
+                            <li>אחסון ענן חזק</li>
+                            <li>תעודת אבטחה SSL</li>
+                            <li>גיבוי יומי</li>
+                            <li>עדכוני תוכנה חודשיים</li>
+                            <li>שעת פיתוח/תוכן בחודש</li>
+                        </ul>
+                        <a href="#contact" class="btn btn-primary" style="width: 100%">בחירה בחבילה</a>
+                    </div>
+                    <div class="card pricing-card">
+                        <h3>פרימיום</h3>
+                        <div class="price" id="price-premium">--</div>
+                        <p>לאתרי סחר ומערכות מורכבות</p>
+                        <ul>
+                            <li>שרת ייעודי</li>
+                            <li>אבטחה מתקדמת וחומת אש</li>
+                            <li>גיבוי בזמן אמת</li>
+                            <li>עדכונים שוטפים ומיידיים</li>
+                            <li>3 שעות פיתוח/תוכן בחודש</li>
+                        </ul>
+                        <a href="#contact" class="btn btn-outline" style="width: 100%">בחירה בחבילה</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="testimonials" class="section-light">
+            <div class="container">
+                <h2>מה הלקוחות אומרים</h2>
+                <div class="grid-3">
+                    <div class="card">
+                        <p>"יואב בנה לנו אתר מדהים תוך זמן קצר. השירות היה מקצועי והתוצאה מדברת בעד עצמה. כמות הפניות עלתה משמעותית."</p>
+                        <h4>- דנה ר., בעלת משרד עורכי דין</h4>
+                    </div>
+                    <div class="card">
+                        <p>"העיצוב החדש שהאתר קיבל פשוט הקפיץ לנו את המותג. התהליך היה שקוף ויואב תמיד היה זמין לכל שאלה."</p>
+                        <h4>- אלון מ., סוכנות נדל"ן</h4>
+                    </div>
+                    <div class="card">
+                        <p>"מעבר לבנייה, שירות התחזוקה נותן לי שקט נפשי. אני יודעת שיש מי שדואג לאתר שלי בכל רגע נתון."</p>
+                        <h4>- מיכל ס., חנות אונליין</h4>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="about">
+            <div class="container">
+                <h2>אודות יואב</h2>
+                <div class="grid-2" style="align-items: center;">
+                    <div>
+                        <p>שלום, אני יואב, מפתח Front-end ומעצב UI עם ניסיון רב ביצירת חוויות דיגיטליות מתקדמות. אני מאמין שאתר אינטרנט צריך להיות לא רק יפה ויזואלית, אלא גם פונקציונלי, נגיש ומהיר.</p>
+                        <p>הגישה שלי משלבת חשיבה עסקית עם טכנולוגיה מודרנית כדי לבנות פתרונות מותאמים אישית שעוזרים לעסקים לצמוח. אני מלווה את לקוחותיי באופן אישי, החל משלב הרעיון ועד לתחזוקה השוטפת.</p>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-num">5+</div>
+                            <p>שנות ניסיון</p>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-num">50+</div>
+                            <p>אתרים הושקו</p>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-num">20+</div>
+                            <p>לקוחות פעילים בתחזוקה</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="section-light">
+            <div class="container">
+                <h2>בואו נדבר</h2>
+                <div class="grid-2">
+                    <form id="contactForm" novalidate>
+                        <div class="form-group">
+                            <label for="name">שם מלא</label>
+                            <input type="text" id="name" required placeholder="הכנס/י שם מלא">
+                            <div class="error-msg">שדה חובה</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">טלפון</label>
+                            <input type="tel" id="phone" required placeholder="050-0000000">
+                            <div class="error-msg">יש להזין מספר טלפון תקין</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">דוא"ל</label>
+                            <input type="email" id="email" required placeholder="example@domain.com">
+                            <div class="error-msg">יש להזין כתובת דוא"ל תקינה</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">הודעה</label>
+                            <textarea id="message" rows="4" required placeholder="איך אוכל לעזור?"></textarea>
+                            <div class="error-msg">שדה חובה</div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">שליחת הודעה</button>
+                        <div id="formSuccess" style="display:none; color: green; margin-top: 1rem; font-weight: bold;">הפנייה נשלחה בהצלחה! נחזור אליך בהקדם.</div>
+                    </form>
+                    
+                    <div class="contact-info">
+                        <h3>פרטי קשר ישירים</h3>
+                        <p style="margin-top: 1rem;"><strong>טלפון:</strong> <span id="info-phone"></span></p>
+                        <p><strong>דוא"ל:</strong> <span id="info-email"></span></p>
+                        
+                        <a href="#" id="whatsapp-link" target="_blank" class="btn whatsapp-btn">
+                            <svg style="margin-inline-end: 8px;" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+                            שליחת הודעה בוואטסאפ
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 יואב | בנייה ועיצוב אתרים. כל הזכויות שמורות.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Data and Config
+        const CONFIG = {
+            phone: "050-123-4567",
+            email: "contact@yoav-web.co.il",
+            whatsappNumber: "972501234567", // רק מספרים, כולל קידומת מדינה
+            prices: {
+                basic: "₪500",
+                advanced: "₪1,200",
+                premium: "₪2,500"
+            }
+        };
+
+        const PORTFOLIO_DATA = [
+            { name: "פיצה נאפולי", category: "אתר תדמית ומסעדה", img: "https://via.placeholder.com/400x250/3b2c6e/ffffff?text=Napoli+Pizza" },
+            { name: "Green Space", category: "חנות אונליין לצמחים", img: "https://via.placeholder.com/400x250/e65c00/ffffff?text=Green+Space" },
+            { name: "עו״ד לוי ושות׳", category: "פורטל משפטי", img: "https://via.placeholder.com/400x250/3b2c6e/ffffff?text=Law+Firm" },
+            { name: "FitLife", category: "בלוג כושר ותזונה", img: "https://via.placeholder.com/400x250/e65c00/ffffff?text=FitLife" },
+            { name: "TechStore", category: "איקומרס למוצרי חשמל", img: "https://via.placeholder.com/400x250/3b2c6e/ffffff?text=TechStore" },
+            { name: "גלריית אומנות", category: "תיק עבודות דיגיטלי", img: "https://via.placeholder.com/400x250/e65c00/ffffff?text=Art+Gallery" }
+        ];
+
+        // Init App
+        document.addEventListener('DOMContentLoaded', () => {
+            // Populate Config Data
+            document.getElementById('info-phone').textContent = CONFIG.phone;
+            document.getElementById('info-email').textContent = CONFIG.email;
+            document.getElementById('price-basic').textContent = CONFIG.prices.basic;
+            document.getElementById('price-advanced').textContent = CONFIG.prices.advanced;
+            document.getElementById('price-premium').textContent = CONFIG.prices.premium;
+            
+            const whatsappLink = document.getElementById('whatsapp-link');
+            whatsappLink.href = `https://wa.me/${CONFIG.whatsappNumber}?text=שלום יואב, הגעתי מהאתר ואשמח להתייעץ.`;
+
+            // Render Portfolio
+            const portfolioContainer = document.getElementById('portfolio-container');
+            PORTFOLIO_DATA.forEach(project => {
+                const card = document.createElement('div');
+                card.className = 'portfolio-item';
+                card.innerHTML = `
+                    <img src="${project.img}" alt="${project.name}" loading="lazy">
+                    <div class="portfolio-overlay">
+                        <h3 style="margin-bottom:0.5rem">${project.name}</h3>
+                        <p style="color:#eee; margin:0">${project.category}</p>
+                    </div>
+                `;
+                portfolioContainer.appendChild(card);
+            });
+
+            // Form Validation
+            const form = document.getElementById('contactForm');
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                let isValid = true;
+                
+                const inputs = form.querySelectorAll('input, textarea');
+                inputs.forEach(input => {
+                    const errorDiv = input.nextElementSibling;
+                    if (!input.checkValidity()) {
+                        errorDiv.style.display = 'block';
+                        input.style.borderColor = '#dc2626';
+                        isValid = false;
+                    } else {
+                        errorDiv.style.display = 'none';
+                        input.style.borderColor = 'var(--border-color)';
+                    }
+                });
+
+                if (isValid) {
+                    document.getElementById('formSuccess').style.display = 'block';
+                    form.reset();
+                    setTimeout(() => { document.getElementById('formSuccess').style.display = 'none'; }, 5000);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
